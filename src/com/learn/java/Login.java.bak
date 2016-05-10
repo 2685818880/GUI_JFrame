@@ -1,0 +1,82 @@
+package com.learn.java;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+
+import javax.swing.*;
+public class Login extends JFrame{
+	  static //User u=new User("admin","admin");
+	  Login l=null;
+	  private JTextField textfield1,textfield2;
+	  private JLabel label,label2,label3;
+	  private JButton button;
+	  private static String a;
+	  public Login() throws Exception{//
+	        super("user login");//父类 
+	        Container container = getContentPane();
+	        container.setLayout(new FlowLayout());
+	        label = new JLabel("username：");
+	        textfield1 = new JTextField(10);
+	        label2 = new JLabel("userpass：");
+	        textfield2= new JTextField(10);
+	        label3 = new JLabel("提示信息");
+	        button = new JButton("enter");
+	        
+	        Class.forName("com.mysql.jdbc.Driver");
+			String url="jdbc:mysql://localhost:3306/mysql";
+			String name="root";
+			String pass="root";
+			Connection con= DriverManager.getConnection(url, name, pass);
+			PreparedStatement pre=con.prepareStatement("select username,password from t_user");
+	        final ResultSet res=pre.executeQuery();
+	        button.addActionListener(new ActionListener()
+	        {
+				public void actionPerformed(ActionEvent e) 
+				{
+					try {
+						while(res.next()){
+							String name=res.getString("username");
+							String pass=res.getString("password");
+						}
+						if(name.equals(textfield1.getText())&&pass.equals(textfield2.getText())){
+								// setVisible(false);
+								new Demo5();
+							}
+							else{
+								label3.setText("输入有误");
+							}
+					} catch (SQLException e1) {
+						e1.printStackTrace();
+					} catch (Exception e1) {
+						e1.printStackTrace();
+					}
+					
+				}
+
+
+			});
+	        //System.exit(0);//退出
+	        container.add(label);
+	        container.add(textfield1);
+	        container.add(label2);
+	        container.add(textfield2);
+		    container.add(button);
+	        setSize(250,300);
+	        setVisible(true);
+	        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	       
+	  }
+      public static void main(String[]args) throws Exception{
+    	   l=new Login();
+    	  
+     }
+
+
+}
+
